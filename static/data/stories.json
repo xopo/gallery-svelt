@@ -1,0 +1,52 @@
+[
+  {
+    "id": "T11",
+    "v": "shooud have old stories in a history element visible on something",
+    "c": true
+  },
+  {
+    "id": "T12",
+    "v": "request a list of data from backend iu",
+    "c": true
+  },
+  {
+    "id": "T13",
+    "v": "get the list and create a list of folders as sidebar ul",
+    "c": true
+  },
+  {
+    "id": "T14",
+    "v": "should be able to add tasks",
+    "c": true
+  },
+  {
+    "id": "T15",
+    "v": "should be able to edit tasks",
+    "c": true
+  },
+  {
+    "id": "T16",
+    "v": "should be able to open a folder and see the pictures",
+    "c": false
+  },
+  {
+    "id": "T17",
+    "v": "should be able to do",
+    "c": false
+  },
+  {
+    "id": "T18",
+    "v": "get a list of images and create a galery layout",
+    "c": false
+  },
+  {
+    "id": "T19",
+    "v": "keep the list of stories in a json on the backend",
+    "c": false
+  },
+  {
+    "id": "T20",
+    "v": "be able to store json data and update it",
+    "c": false
+  }
+]
