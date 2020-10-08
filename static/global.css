@@ -35,6 +35,6 @@ code {
 	}
 }
 
-ol li:first-of-type {
+ol:not(.history) li:first-of-type {
 	font-weight: bolder;
 }

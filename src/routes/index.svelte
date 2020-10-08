@@ -1,31 +1,55 @@
-<script lang='ts'>
-	import { onMount } from 'svelte';
+<script lang='ts' >
+	import { onMount, onDestroy } from 'svelte';
 	import { getMessage, setMessage } from '../WS/wsHelper';
+	import webSock from '../WS/socket';
+	let WS = null;
+	let subscription = () => {};
+	let folders = [];
+	let images = [];
 	
-	onMount(async() => {
-		const protocol = window && window.location.protocol === 'https' ? 'wss' : 'ws';
-		const wsurl = `${protocol}://${window.location.host}`;
-		const ws = new WebSocket(wsurl);
-		
-		ws.onopen = _ => ws.send(setMessage('I just open com'));
-		ws.onclose = _ => ws.send(setMessage('I just close'));
+	onMount(()=>{
+		WS = webSock();
+		WS.init();
+		setTimeout(() => {
+			WS.send('getContent');
+		}, 50);
 
-		ws.addEventListener('message', ({data}) => {
-			console.log({data})
-			ws.send(setMessage('hello'));
-		});
+		subscription = WS.content.subscribe((data: {folders:Array<string>, images: Array<string>}) => {
+			folders = data.folders;
+			images = data.images;
+		})
+	});
 
-		
-	})
+	onDestroy(subscription);
 </script>
 
 <head>
 	<title>Gallery</title>
 </head>
 <ol>
-	<p>request a list of data from backend</p>
-	<p>get the list and create a list of folders as sidebar ul</p>
-	<p>get a list of images and create a galery layout</p>
-	<p>should be able to open a folder and see the pictures</p>
-	<p>should be able to </p>
+	<li>get list of folders and pictures from backend</li>
+	<li>make request using ws</li>
+	<li>create server side functionality for browse functionality</li>
+	<li>return root entries</li>
+	<li>use navigation for root/foolder/infolder</li>
+	
 </ol>
+
+{JSON.stringify({folders, images}, null, 2)}
+
+{#if folders && folders.length}
+<ul>
+{#each folders as folder}
+	<li>{folder}</li>
+{/each}
+</ul>
+{/if}
+
+{#if images && images.length}
+<ul>
+{#each images as image}
+	<li>{image}</li>
+	<img src={`/boko/${image}`} alt="some">
+{/each}
+</ul>
+{/if}

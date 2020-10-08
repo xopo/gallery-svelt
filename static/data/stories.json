@@ -1,7 +1,7 @@
 [
   {
     "id": "T11",
-    "v": "shooud have old stories in a history element visible on something",
+    "v": "-shooud have old stories in a history element visible on something",
     "c": true
   },
   {
@@ -26,12 +26,12 @@
   },
   {
     "id": "T16",
-    "v": "should be able to open a folder and see the pictures",
+    "v": "should be able to open a hardcoded path to a folder and see the pictures2",
     "c": false
   },
   {
     "id": "T17",
-    "v": "should be able to do",
+    "v": "should be able to use .env to store the gallery location so that I can use the app in different environments",
     "c": false
   },
   {

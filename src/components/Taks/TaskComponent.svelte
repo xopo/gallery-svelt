@@ -1,12 +1,8 @@
 <script lang="ts">
     export let task; 
-    export let i = 2;
     export let setEdit = _ => {};
 </script>
 <style>
-    .first {
-        font-weight: bolder;
-    }
     li {
         padding: 5px;
         display: flex;
@@ -47,7 +43,7 @@
 <li class:completed={task.c}>
     <span class='text'>{task.v}</span>
     
-    <div class='action' class:first={i === 0}>
+    <div class='action'>
         <div on:click>{task.c ? '🔄'  : "✔️"}</div>
         <div on:click={ _ => setEdit(task.id)}>{!task.c ? '✏️' : '' }</div>
     </div>

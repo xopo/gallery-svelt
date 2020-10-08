@@ -1,9 +1,9 @@
 <script lang="ts" >
-    import { onMount } from 'svelte';
-    import { getMessage, setMessage } from '../WS/wsHelper';
+    import { onMount, onDestroy } from 'svelte';
     import type { Task } from '../WS/types';
     import TaskComponent from '../components/Taks/TaskComponent.svelte';
-    import TaskForm from '../components/Taks/TaskForm.svelte';
+    import TaskForm from '../components/Taks/TaskForm.svelte'; 
+    import webSock from '../WS/socket';
 
     let tasks: Array<Task> = [];
     let history: Array<Task> = [];
@@ -12,32 +12,29 @@
     let updateStarted = false;
     let taskToEdit;
     let saveTask;
-    $: console.log(taskToEdit);
+    let WS;
+    let subscription = () => {};
 
-	onMount(async() => {
-		const protocol = window && window.location.protocol === 'https' ? 'wss' : 'ws';
-		const wsurl = `${protocol}://${window.location.host}`;
-		const ws = new WebSocket(wsurl, 'story');
-		
-		ws.onopen = _ => ws.send(setMessage('getstories'));
-		ws.onclose = _ => ws.send(setMessage('I just close'));
 
-		ws.addEventListener('message', ({data}) => {
-            const result = getMessage(data);
-            if (result.tasks) {
-                tasks = result.tasks.filter(task => !task.c);
-                history = result.tasks.filter(task => task.c);
-                console.log(tasks, history);
-                updateStarted = false;
-            }
-		});
+	onMount( () => {
+		WS = webSock();
+        WS.init();
+        subscription = WS.tasks.subscribe( items => {
+            tasks = items.filter(task => !task.c);
+            history = items.filter(task => task.c);
+            updateStarted = false;
+        });
+
+        setTimeout(() => {
+            WS.send('getstories');
+        }, 50);
 
 		setCompletedTask = id => {
             if (updateStarted) return;
             updateStarted = true;
             const updateTask:Task = tasks.find(task => task.id === id);
             updateTask.c = updateTask.c ? !updateTask.c : true;
-            ws.send(setMessage({updateTask}))
+            WS.send({updateTask});
         }
 
         resetHistoryTask = id => {
@@ -45,21 +42,25 @@
             updateStarted = true;
             const updateTask:Task = history.find(task => task.id === id);
             updateTask.c = !updateTask.c;
-            ws.send(setMessage({updateTask}))
+            WS.send({updateTask});
         }
 
         saveTask = (ev) => {
             ev.preventDefault();
-            console.log(' save task', taskToEdit)
-            ws.send(setMessage({updateTask: taskToEdit}));
+            WS.send({updateTask: taskToEdit});
             taskToEdit = undefined;
         }
+
+        return () => {
+            console.log('Here we cleanup');
+        };
 	})
     
     const setEdit = id => {
-        console.log({id});
         taskToEdit = tasks.find(task => task.id === id);
     }
+
+    onDestroy(subscription);
 	
 </script>
 
@@ -86,8 +87,8 @@
         <TaskForm bind:taskToEdit={taskToEdit} on:click={saveTask}/>
     {/if}
     <ol>
-        {#each tasks as task, i (task.v)} 
-            <TaskComponent  on:click={_=>setCompletedTask(task.id)} {task} {i} {setEdit}/>
+        {#each tasks as task (task.v)} 
+            <TaskComponent  on:click={_=>setCompletedTask(task.id)} {task} {setEdit}/>
         {/each}
     </ol>
     <ol class='history'>

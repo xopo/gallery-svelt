@@ -6,11 +6,15 @@ import * as sapper from '@sapper/server';
 import WebSocket from 'ws';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
+import { getContent, galleryPath } from './WS/API/getContent';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
+const galleryStuff = sirv(galleryPath);
+
 const { handler } = polka() // You can also use Express
+	.use(galleryStuff)
 	.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
@@ -33,6 +37,10 @@ wss.on('connection', ws => {
 			ws.send(setMessage({tasks: await getTasks()})); 
 		}
 
+		if (data === 'getContent') {
+			const content = await getContent();
+			ws.send(setMessage({content}));
+		}
 	})
 }) 
 
