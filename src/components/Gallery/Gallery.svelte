@@ -4,6 +4,8 @@
     export let gotToFolder;
     export let basePath;
     export let history;
+
+    $: console.log('++++ images', {basePath},images);
 </script>
 
 <style>
@@ -16,6 +18,7 @@
         width: auto;
         object-fit: cover;
         flex: 1;
+        border: 1px solid transparent;
 	}
     .folders {
         display: block;
@@ -67,4 +70,5 @@
 	<img src={`${basePath}${image}`} alt="some">
 {/each}
 </div>
+{JSON.stringify({basePath, images}, null, 2)}
 {/if}

@@ -18,9 +18,18 @@
 	// $: herstory = getURILocation(history);
 	// $: console.log(herstory)
 	$: if (WS) {
-		console.log('trigger get content')
 		WS.send({ getContent: { dirPath: getURILocation(history) } });
 	}
+
+	function updateImages(newEntries) {
+		if (newEntries.length) {
+			images = [...images, ...newEntries.splice(0 ,30)];
+			setTimeout(() => { 
+				updateImages(newEntries);
+			}, 3000);
+		}
+	}
+
 	onMount(()=>{
 		WS = webSock();
 		WS.init();
@@ -30,15 +39,14 @@
 		}, 50);
 
 		subscription = WS.content.subscribe((data: Content) => {
-			({folders, images, basePath} = data);
+			({folders, basePath} = data);
+			images = [];
+			console.log('update images', data.images)
+			updateImages(data.images || []);
 		})
 
 		gotToFolder = (folder: string) => {
 			history = [...history, folder];
-			// setTimeout(() => {
-			// 	console.log('req data');
-			// 	WS.send({ getContent: { dirPath: herstory } });
-			// },10);
 		}
 	});
 
