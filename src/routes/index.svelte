@@ -1,12 +1,13 @@
 <script lang='ts' >
 	import { onMount, onDestroy } from 'svelte';
-	import { getMessage, setMessage } from '../WS/wsHelper';
 	import webSock from '../WS/socket';
+	import type { Content } from '../WS/types';
 	let WS = null;
 	let subscription = () => {};
 	let folders = [];
 	let images = [];
-	
+	let basePath = '/';
+
 	onMount(()=>{
 		WS = webSock();
 		WS.init();
@@ -14,9 +15,8 @@
 			WS.send('getContent');
 		}, 50);
 
-		subscription = WS.content.subscribe((data: {folders:Array<string>, images: Array<string>}) => {
-			folders = data.folders;
-			images = data.images;
+		subscription = WS.content.subscribe((data: Content) => {
+			({folders, images, basePath} = data);
 		})
 	});
 
@@ -48,8 +48,7 @@
 {#if images && images.length}
 <ul>
 {#each images as image}
-	<li>{image}</li>
-	<img src={`/boko/${image}`} alt="some">
+	<img src={`${basePath}${image}`} alt="some">
 {/each}
 </ul>
 {/if}
