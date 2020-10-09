@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import type { Content } from '../types';
+import { log } from '../../logger';
 
 export const galleryPath = '/Users/dratiu/Downloads/gallery';
 const acceptedFileType = ['jpg', 'gif', 'jpeg'];
@@ -16,15 +17,16 @@ const fileAccepted = fileName => {
 export const getContent = async (fromFolder:string) => {
     const basePath = fromFolder ?? '/';
     const gPath = path.join(galleryPath, basePath);
+    log({basePath, gPath});
 
     const content:Content = { 
         folders: [], 
         images: [],
-        basePath: basePath,
+        basePath: basePath === '/' ? '/' : `${basePath}/`,
         count: {
             folders: 0,
             images: 0
-        };
+        }
     };
     const data = await fs.readdir(gPath, {encoding: 'utf8', withFileTypes: true});
     for (let i=0; i < data.length; i++) {
@@ -36,6 +38,6 @@ export const getContent = async (fromFolder:string) => {
     }
     content.count.folders = content.folders.length;
     content.count.images = content.images.length;
-    
+
     return content;
 }

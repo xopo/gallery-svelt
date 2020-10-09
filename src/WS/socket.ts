@@ -9,8 +9,8 @@ const webSock = () => {
     const content = writable({});
 
     function init(addr = '') {
-        console.log('init')
         if (typeof WebSocket === undefined ) return;
+        
         if(!socket) {
             const protocol = window && window.location.protocol === 'https' ? 'wss' : 'ws';
             const wsurl = `${protocol}://${window.location.host}`;
@@ -29,14 +29,24 @@ const webSock = () => {
         //socket.onopen = () => socket.send(setMessage('get my panties'));
     }
 
+    let rtr = 0;
+    let timeout;
     const send = data => {
+        if (rtr > 100) {
+            clearTimeout(timeout);
+            rtr = 0;
+            return;
+        }
         if (socket.readyState === 1) {
             socket.send(setMessage(data));
+            clearTimeout(timeout);
+            rtr = 0;
         } else {
+            rtr += 1;
             setTimeout(() => {
-                console.log('retry', data);
+                console.log('retry-'+rtr, data);
                 send(data);
-            }, 100)
+            }, 200)
         }
     }
 

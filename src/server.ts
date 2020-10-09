@@ -23,25 +23,34 @@ const { handler } = polka() // You can also use Express
 	
 const server = http.createServer(handler);
 const wss = new WebSocket.Server({server});
+export let wsLog = _ => {};
 
 wss.on('connection', ws => {
+	const send = entry => ws.send(setMessage(entry));
+
 	ws.on('message', async (json:string) => {
 		const data = getMessage(json);
 
 		if (data === 'getstories') {
-			ws.send(setMessage({tasks: await getTasks()}));
+			send({tasks: await getTasks()});
 		}
 
 		if (data.updateTask) {
 			await updateTask(data.updateTask);
-			ws.send(setMessage({tasks: await getTasks()})); 
+			send({tasks: await getTasks()}); 
 		}
 
-		if (data === 'getContent') {
-			const content = await getContent();
-			ws.send(setMessage({content}));
+		if (data.getContent) {
+			const { getContent: { dirPath } } = data;
+			const content = await getContent(decodeURI(dirPath));
+			send({content});
 		}
-	})
+	});
+
+	wsLog = log => {
+		send({log})
+	};
+
 }) 
 
 server.listen(PORT, () => {
