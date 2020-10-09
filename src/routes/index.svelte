@@ -43,7 +43,6 @@
 		subscription = WS.content.subscribe((data: Content) => {
 			({folders, basePath} = data);
 			images = [];
-			console.log('update images', data.images)
 			updateImages(data.images || []);
 		})
 
@@ -64,10 +63,12 @@
 	{...{folders, images, gotToFolder, basePath, history}}
 />
 <ol>
-	<li>create a ws singleton so it can be reused</li>
-	<li> show logs </li>
-	<li>create server side functionality for browse different folders</li>
-	<li>use navigation for root/foolder/infolder</li>
+	<li>get contents should get web optimised images</li>
+	<li>on load folder content start optimise images</li>
+	<li>check cached content exists</li>
+	<li>optimised image is sent to UI</li>
+	<li>on completion inform about completion</li>
+	<li>smile</li>
 </ol>
 
 

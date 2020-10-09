@@ -16,7 +16,7 @@
     let subscription = () => {};
 
 
-	onMount( () => {
+	onMount( (): void => {
 		WS = getSocket();
         subscription = WS.tasks.subscribe( items => {
             tasks = items.filter(task => !task.c);
@@ -28,7 +28,7 @@
             WS.send('getstories');
         }, 50);
 
-		setCompletedTask = id => {
+		setCompletedTask = (id: string) :void => {
             if (updateStarted) return;
             updateStarted = true;
             const updateTask:Task = tasks.find(task => task.id === id);
@@ -36,7 +36,7 @@
             WS.send({updateTask});
         }
 
-        resetHistoryTask = id => {
+        resetHistoryTask = (id: string): void => {
             if (updateStarted) return;
             updateStarted = true;
             const updateTask:Task = history.find(task => task.id === id);
@@ -44,18 +44,14 @@
             WS.send({updateTask});
         }
 
-        saveTask = (ev) => {
+        saveTask = (ev: Event): void => {
             ev.preventDefault();
             WS.send({updateTask: taskToEdit});
             taskToEdit = undefined;
         }
-
-        return () => {
-            console.log('Here we cleanup');
-        };
 	})
     
-    const setEdit = id => {
+    const setEdit = (id :string): void => {
         taskToEdit = tasks.find(task => task.id === id);
     }
 

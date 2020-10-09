@@ -1,18 +1,17 @@
 <script lang="ts">
     import icons from '../../WS/UI/emoji';
-    export let folders;
-    export let images;
-    export let gotToFolder;
-    export let basePath;
-    export let history;
-
-    $: console.log('++++ images', {basePath},images);
+    export let folders: Array<string>;;
+    export let images: Array<string>;;
+    export let gotToFolder: (s :string)=>void;
+    export let basePath: string;
+    export let history: Array<string>;
 </script>
 
 <style>
 	.gallery {
 		display: flex;
     	flex-wrap: wrap;
+        user-select: none;
 	}
 	.gallery img {
         height: 150px;
@@ -20,19 +19,22 @@
         object-fit: cover;
         flex: 1;
         border: 1px solid transparent;
+        cursor: pointer;
 	}
     .folders {
         display: block;
-        max-width: 200px;
+        width: 200px;
         box-shadow: 0 0 20px #aaa;
         position: fixed;
         z-index: 1;
         background: white;
-        /* left: -150px; */
         left: 0;
         color: black;
         list-style: none;
         padding: 2em 1em;
+        height: 100%;
+        top: 40px;
+        user-select: none;
     }
     .folders:empty {
         display: none;
@@ -60,7 +62,7 @@
     {/if}
     {#if folders && folders.length}
     {#each folders as folder}
-        <li on:click={() => gotToFolder(folder)}>{folder}</li>
+        <li on:click={() => gotToFolder(folder)}>{icons.folder} {folder}</li>
     {/each}
     {/if}
 </ul>
@@ -71,5 +73,4 @@
 	<img src={`${basePath}${image}`} alt="some">
 {/each}
 </div>
-{JSON.stringify({basePath, images}, null, 2)}
 {/if}

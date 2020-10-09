@@ -7,7 +7,7 @@
     let logs:Array<string> = [];
     let WS: WebSock;
     let subscription = () => {};
-    let pin = icons.pin;
+    let pin = '';
     
     onMount(() => {
         WS = getSocket();
@@ -22,8 +22,7 @@
     $: entry = logs && logs.reduce((ac: string, log: string) => ac = `${ac}${log}`, '');
 
     const setPin = () => {
-        const newPin = (pin === icons.pin ? icons.pushpin : icons.pin);
-        console.log('set pin', newPin);
+        const newPin = pin === icons.pushpin ? '' : icons.pushpin;
         pin = newPin;
     }
 
@@ -47,12 +46,17 @@
         color: white;
         width: 100%;
         height: 100%;
+        font-size: .5em;
+    }
+    textarea:hover {
+        font-size: 1em;
     }
     .pin {
         display: flex;
         justify-content: flex-end;
         margin-right: 10px;
         cursor: pointer;
+        height: 1em;
     }
     /* textarea:empty {
         display: none;

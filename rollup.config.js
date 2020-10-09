@@ -32,7 +32,14 @@ export default {
 				dev,
 				hydratable: true,
 				preprocess: sveltePreprocess(),
-				emitCss: true
+				emitCss: true,
+				onwarn: (warning, handler) => {
+					// e.g. don't warn on <marquee> elements, cos they're cool
+					if (warning.code === 'a11y-autofocus') return;
+			
+					// let Rollup handle all other warnings normally
+					handler(warning);
+				}
 			}),
 			resolve({
 				browser: true,
@@ -79,7 +86,14 @@ export default {
 				generate: 'ssr',
 				hydratable: true,
 				preprocess: sveltePreprocess(),
-				dev
+				dev,
+				onwarn: (warning, handler) => {
+					// e.g. don't warn on <marquee> elements, cos they're cool
+					if (warning.code === 'a11y-autofocus') return;
+			
+					// let Rollup handle all other warnings normally
+					handler(warning);
+				}
 			}),
 			resolve({
 				dedupe: ['svelte']

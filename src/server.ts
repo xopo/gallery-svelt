@@ -1,20 +1,26 @@
+
+// load env
 import http from 'http';
 import sirv from 'sirv';
 import polka from 'polka';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 import WebSocket from 'ws';
+import confg from './WS/API/envData';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
-import { getContent, galleryPath } from './WS/API/getContent';
+import { cacheDir, getContent } from './WS/API/getContent';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-const galleryStuff = sirv(galleryPath);
+/*@TODO remove sirv files from image source after the cache functionality is completed*/
+const galleryStuff = sirv(confg.IMAGESOURCE);
+console.log({cacheDir})
+const cachedImage = sirv(cacheDir)
 
 const { handler } = polka() // You can also use Express
-	.use(galleryStuff)
+	.use(cachedImage)
 	.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),

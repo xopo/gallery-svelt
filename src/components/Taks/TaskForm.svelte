@@ -1,8 +1,12 @@
 <script lang='ts'>
-    export let taskToEdit;
+    import type { Task } from "../../WS/types";
+
+
+    export let taskToEdit: Task;
     
 </script>
 
+<!-- svelte-ignore a11y-autofocus -->
 <style>
     form {
         display: flex;
