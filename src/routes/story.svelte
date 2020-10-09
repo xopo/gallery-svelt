@@ -3,7 +3,7 @@
     import type { Task } from '../WS/types';
     import TaskComponent from '../components/Taks/TaskComponent.svelte';
     import TaskForm from '../components/Taks/TaskForm.svelte'; 
-    import webSock from '../WS/socket';
+    import getSocket from '../WS/socket';
 
     let tasks: Array<Task> = [];
     let history: Array<Task> = [];
@@ -17,8 +17,7 @@
 
 
 	onMount( () => {
-		WS = webSock();
-        WS.init();
+		WS = getSocket();
         subscription = WS.tasks.subscribe( items => {
             tasks = items.filter(task => !task.c);
             history = items.filter(task => task.c);

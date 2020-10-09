@@ -13,3 +13,12 @@ export interface Content {
         images: number
     }
 }
+
+export interface WebSock {
+    close: () => null,
+    init: () => null,
+    send: (data) => null,
+    content: any,
+    logEntry: any,
+    tasks: any
+}

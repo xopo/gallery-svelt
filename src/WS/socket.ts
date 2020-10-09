@@ -1,20 +1,29 @@
 import { writable } from 'svelte/store';
 import { getMessage, setMessage } from './wsHelper';
 
-let socket;
+let socket = null;
+let WS = null;
+
+const getSocket = () => {
+    if (WS) return WS;
+    WS = webSock();
+    WS.init();
+    return WS;
+}
 
 const webSock = () => {
-    
     const tasks = writable([]);
     const content = writable({});
+    const logEntry = writable([]);
 
-    function init(addr = '') {
+    function init() {
         if (typeof WebSocket === undefined ) return;
         
         if(!socket) {
             const protocol = window && window.location.protocol === 'https' ? 'wss' : 'ws';
             const wsurl = `${protocol}://${window.location.host}`;
             socket = new WebSocket(wsurl);
+            console.log('socket initialized')
         }
         
         socket.onmessage = ({data}) => {
@@ -23,6 +32,8 @@ const webSock = () => {
                 tasks.set(result.tasks);
             } else if (result.content) {
                 content.set(result.content);
+            } else if (result.log) {
+                logEntry.set(result.log);
             }
         }
 
@@ -30,7 +41,7 @@ const webSock = () => {
     }
 
     let rtr = 0;
-    let timeout;
+    let timeout: number;
     const send = data => {
         if (rtr > 100) {
             clearTimeout(timeout);
@@ -55,13 +66,13 @@ const webSock = () => {
     }
 
     return { 
-        getMessage,
-        init,
         close,
+        init,
         send,
-        tasks,
-        content
+        content,
+        logEntry,
+        tasks
     }
 }
 
-export default webSock;
+export default getSocket;

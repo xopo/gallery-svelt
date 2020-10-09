@@ -26,8 +26,8 @@
   },
   {
     "id": "T16",
-    "v": "33should be able to open a hardcoded path to a folder and see the pictures2",
-    "c": false
+    "v": "should be able to open a hardcoded path to a folder and see the pictures2",
+    "c": true
   },
   {
     "id": "T17",

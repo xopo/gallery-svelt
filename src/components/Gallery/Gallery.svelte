@@ -1,4 +1,5 @@
 <script lang="ts">
+    import icons from '../../WS/UI/emoji';
     export let folders;
     export let images;
     export let gotToFolder;
@@ -53,7 +54,7 @@
     {#if history.length > 1}
         <li>
             <button on:click>
-                🔙
+                {icons.back}
             </button>
         </li>
     {/if}

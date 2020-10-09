@@ -1,8 +1,7 @@
 <script lang='ts' >
 	import { onMount, onDestroy } from 'svelte';
 	import Gallery from '../components/Gallery/Gallery.svelte';
-	import Logs from '../components/Logs.svelte';
-	import webSock from '../WS/socket';
+	import getSocket from '../WS/socket';
 	import type { Content } from '../WS/types';
 	import { getURILocation } from '../WS/UI/helpers';
 
@@ -10,29 +9,32 @@
 	let subscription = () => {};
 	let folders = [];
 	let images = [];
+	let stopLoadImages = false;
 	let basePath = '/';
-	let gotToFolder;
+	let gotToFolder = (s: string): void => {};
 	let history = [];
 	
-	// get content on history change
-	// $: herstory = getURILocation(history);
-	// $: console.log(herstory)
 	$: if (WS) {
+		/* get content when path is changed */
 		WS.send({ getContent: { dirPath: getURILocation(history) } });
 	}
 
-	function updateImages(newEntries) {
+	function updateImages(newEntries: Array<string>) {
 		if (newEntries.length) {
 			images = [...images, ...newEntries.splice(0 ,30)];
 			setTimeout(() => { 
-				updateImages(newEntries);
-			}, 3000);
+				if (!stopLoadImages) {
+					updateImages(newEntries);
+					stopLoadImages = false
+				};
+			}, 500);
 		}
 	}
 
 	onMount(()=>{
-		WS = webSock();
-		WS.init();
+		console.log('get socket comp')
+		WS = getSocket();
+		console.log(typeof WS);
 		setTimeout(() => {
 			// WS.send({ getContent: { dirPath: herstory } });
 			history.push('/')
@@ -45,7 +47,8 @@
 			updateImages(data.images || []);
 		})
 
-		gotToFolder = (folder: string) => {
+		gotToFolder = (folder: string): void => {
+			stopLoadImages = true;
 			history = [...history, folder];
 		}
 	});
@@ -56,9 +59,13 @@
 <head>
 	<title>Gallery</title>
 </head>
-<Gallery on:click={() => history.length = history.length - 1} {folders} {images} {gotToFolder} {basePath} {history}/>
-<Logs />
+<Gallery 
+	on:click={() => history.length = history.length - 1} 
+	{...{folders, images, gotToFolder, basePath, history}}
+/>
 <ol>
+	<li>create a ws singleton so it can be reused</li>
+	<li> show logs </li>
 	<li>create server side functionality for browse different folders</li>
 	<li>use navigation for root/foolder/infolder</li>
 </ol>
