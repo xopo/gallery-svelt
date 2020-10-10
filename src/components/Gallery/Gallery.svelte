@@ -14,7 +14,7 @@
         user-select: none;
 	}
 	.gallery img {
-        height: 150px;
+        height: 250px;
         width: auto;
         object-fit: cover;
         flex: 1;
@@ -70,7 +70,7 @@
 {#if images && images.length}
 <div class='gallery'>
 {#each images as image}
-	<img src={`${basePath}${image}`} alt="some">
+	<img src={`cached/images/${basePath}${image}`} alt={image}>
 {/each}
 </div>
 {/if}

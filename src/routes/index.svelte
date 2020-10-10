@@ -10,41 +10,56 @@
 	let folders = [];
 	let images = [];
 	let stopLoadImages = false;
+	let newSet = true
 	let basePath = '/';
 	let gotToFolder = (s: string): void => {};
 	let history = [];
+	let waitingForImage = false;
+	let processInterval: number;
 	
 	$: if (WS) {
 		/* get content when path is changed */
 		WS.send({ getContent: { dirPath: getURILocation(history) } });
 	}
 
-	function updateImages(newEntries: Array<string>) {
-		if (newEntries.length) {
-			images = [...images, ...newEntries.splice(0 ,30)];
-			setTimeout(() => { 
-				if (!stopLoadImages) {
-					updateImages(newEntries);
-					stopLoadImages = false
-				};
-			}, 500);
-		}
+	function updateImages(newEntries: Array<string>): void {
+		if (!newEntries.length) return;
+		processInterval = setInterval(function() {
+			if (waitingForImage) return;
+			const [img, ...rest] = newEntries;
+			newEntries = rest;
+			if (!img || !newEntries) {
+				clearInterval(processInterval);
+			}
+			if (img) {
+				WS.send({ getThumbnail: { dirPath: getURILocation(history), img } });
+				waitingForImage = true
+			}
+		}, 50);
 	}
 
 	onMount(()=>{
-		console.log('get socket comp')
 		WS = getSocket();
-		console.log(typeof WS);
 		setTimeout(() => {
 			// WS.send({ getContent: { dirPath: herstory } });
 			history.push('/')
-		}, 50);
+		}, 1);
 
 		subscription = WS.content.subscribe((data: Content) => {
-			({folders, basePath} = data);
-			images = [];
-			updateImages(data.images || []);
-		})
+			if (data.processed) {
+				const { thumb, message} = data.processed;
+				
+				images = [...images, thumb];
+				waitingForImage = false;
+				if (message === 'completed') {
+					clearInterval(processInterval);
+				}
+			} else {
+				({folders, basePath} = data);
+				images = [];
+				updateImages(data.images || []);
+			}
+		});
 
 		gotToFolder = (folder: string): void => {
 			stopLoadImages = true;
@@ -52,23 +67,28 @@
 		}
 	});
 
-	onDestroy(subscription);
+	onDestroy(() => {
+		clearInterval(processInterval);
+		return subscription;
+	});
+
+	const onGoBack = () => {
+		clearInterval(processInterval);
+		waitingForImage = false;
+		history.length = history.length - 1
+	}
 </script>
 
 <head>
 	<title>Gallery</title>
 </head>
 <Gallery 
-	on:click={() => history.length = history.length - 1} 
+	on:click={onGoBack} 
 	{...{folders, images, gotToFolder, basePath, history}}
 />
 <ol>
-	<li>get contents should get web optimised images</li>
-	<li>on load folder content start optimise images</li>
-	<li>check cached content exists</li>
-	<li>optimised image is sent to UI</li>
-	<li>on completion inform about completion</li>
-	<li>smile</li>
+	<li>create a save setup folder to remember pinned items</li>
+	<li>get preferences on </li>
 </ol>
 
 

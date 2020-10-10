@@ -11,7 +11,6 @@
     "validate": "svelte-check --ignore src/node_modules/@sapper"
   },
   "dependencies": {
-    "@types/sharp": "^0.26.0",
     "compression": "^1.7.1",
     "dotenv": "^8.2.0",
     "polka": "next",
@@ -34,6 +33,7 @@
     "@types/compression": "^1.7.0",
     "@types/node": "^14.11.1",
     "@types/polka": "^0.5.1",
+    "@types/sharp": "^0.26.0",
     "@types/ws": "^7.2.7",
     "rollup": "^2.3.4",
     "rollup-plugin-svelte": "^6.0.0",

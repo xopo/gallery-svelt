@@ -11,6 +11,10 @@ export interface Content {
     count?: {
         folders: number,
         images: number
+    },
+    processed?: {
+        thumb: string,
+        message?: string
     }
 }
 

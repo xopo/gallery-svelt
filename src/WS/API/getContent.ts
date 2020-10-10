@@ -1,9 +1,9 @@
 import fs, { promises as afs } from 'fs';
 import path from 'path';
-import type { Content } from '../types';
 import confg from './envData';
 import { log } from '../../logger';
 import sharp from 'sharp';
+import type { Content } from '../types';
 
 
 // export const galleryPath = imagesPath;
@@ -21,7 +21,7 @@ export const cacheDir = path.resolve(process.cwd(), 'static', 'cached', 'images'
 
 export const getContent = async (fromFolder:string): Promise<Content> => {
     const basePath = fromFolder ?? '/';
-    const gPath = path.join(confg.IMAGESOURCE, basePath);
+    const sourcePath = path.join(confg.IMAGESOURCE, basePath);
 
     const content:Content = { 
         folders: [], 
@@ -32,17 +32,17 @@ export const getContent = async (fromFolder:string): Promise<Content> => {
             images: 0
         }
     };
-    const data = await afs.readdir(gPath, {encoding: 'utf8', withFileTypes: true});
+    const data = await afs.readdir(sourcePath, {encoding: 'utf8', withFileTypes: true});
     for (let i=0; i < data.length; i++) {
         if(data[i].isDirectory()) {
             content.folders.push(await checkAndCreateFolder(data[i].name, basePath));
         } else if (data[i].isFile() && fileAccepted(data[i].name)) {
-            content.images.push(await checkAndCreateImage(data[i].name, basePath, gPath));
+            content.images.push(data[i].name);
+            // content.images.push(await checkAndCreateImage(data[i].name, basePath, sourcePath));
         }
     }
     content.count.folders = content.folders.length;
     content.count.images = content.images.length;
-    log('== return content');
     return content;
 }
 
@@ -60,26 +60,23 @@ const checkAndCreateFolder = async (dir: string, basePath: string): Promise<stri
     return dir;
 }
 
+export const getThumbNailImage = async (img: string, basePath: string) => {
+    const sourcePath = path.join(confg.IMAGESOURCE, basePath);
+    return await checkAndCreateImage(img, basePath, sourcePath);
+}
+
 const checkAndCreateImage = async (img: string, basePath, source: string): Promise<string> => {
     const input = path.join(source, img);
     const ext = img.split('.').reverse()[0];
     const thumb = img.replace(ext, `thumb.${ext}`);
     const output = path.join(cacheDir, basePath, thumb);
-
-    await fs.access(output, null,  async (err): Promise<void> => {
-        if (err && err.code === 'ENOENT') {
-            try {
-                log('\n++create file - ' +  output);
-                await sharp(input)
-                .rotate()
-                .resize(200)
-                .toFile(output);
-                
-            } catch(er) {
-                log(er);
-            }
-        }
-    });
-    log('\n--return file name - ' + thumb);
+    try {
+        await afs.access(output)
+    } catch (er) {
+        await sharp(input)
+            .rotate()
+            .resize(200)
+            .toFile(output);
+    }
     return thumb;
 }

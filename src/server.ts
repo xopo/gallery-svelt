@@ -9,18 +9,18 @@ import WebSocket from 'ws';
 import confg from './WS/API/envData';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
-import { cacheDir, getContent } from './WS/API/getContent';
+import { cacheDir, getContent, getThumbNailImage } from './WS/API/getContent';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
 /*@TODO remove sirv files from image source after the cache functionality is completed*/
-const galleryStuff = sirv(confg.IMAGESOURCE);
-console.log({cacheDir})
-const cachedImage = sirv(cacheDir)
+// const galleryStuff = sirv(confg.IMAGESOURCE);
+// console.log({cacheDir})
+// const cachedImage = sirv(cacheDir)
 
 const { handler } = polka() // You can also use Express
-	.use(cachedImage)
+	//.use(cachedImage)
 	.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
@@ -47,9 +47,19 @@ wss.on('connection', ws => {
 		}
 
 		if (data.getContent) {
-			const { getContent: { dirPath } } = data;
+			const { dirPath }  = data.getContent;
 			const content = await getContent(decodeURI(dirPath));
 			send({content});
+		}
+
+		if (data.getThumbnail) {
+			const { dirPath, img } = data.getThumbnail;
+			if (dirPath.length && img && img.length) {
+				const thumb = await getThumbNailImage(img, decodeURI(dirPath));
+				send({ content: { processed: { thumb, message: '' } } });
+			} else {
+				send({ content: {processed: { message: 'error bad dir or img' } } });
+			}
 		}
 	});
 
