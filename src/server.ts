@@ -6,10 +6,9 @@ import polka from 'polka';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 import WebSocket from 'ws';
-import confg from './WS/API/envData';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
-import { cacheDir, getContent, getThumbNailImage } from './WS/API/getContent';
+import { getContent, getThumbNailImage } from './WS/API/getContent';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
@@ -53,10 +52,10 @@ wss.on('connection', ws => {
 		}
 
 		if (data.getThumbnail) {
-			const { dirPath, img } = data.getThumbnail;
-			if (dirPath.length && img && img.length) {
-				const thumb = await getThumbNailImage(img, decodeURI(dirPath));
-				send({ content: { processed: { thumb, message: '' } } });
+			const { dirPath, batch } = data.getThumbnail;
+			if (dirPath.length && batch && batch.length) {
+				const thumbs = await Promise.all(batch.map(async(img) =>  await getThumbNailImage(img, decodeURI(dirPath))));
+				send({ content: { processed: { thumbs, message: '' } } });
 			} else {
 				send({ content: {processed: { message: 'error bad dir or img' } } });
 			}

@@ -78,5 +78,6 @@ const checkAndCreateImage = async (img: string, basePath, source: string): Promi
             .resize(200)
             .toFile(output);
     }
+    
     return thumb;
 }

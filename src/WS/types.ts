@@ -10,14 +10,19 @@ export interface Content {
     basePath: string,
     count?: {
         folders: number,
+
         images: number
     },
     processed?: {
-        thumb: string,
+        thumbs: Array<string>,
         message?: string
     }
 }
 
+export interface SelectedPin {
+    dirPannel: boolean, 
+    log: boolean
+}
 export interface WebSock {
     close: () => null,
     init: () => null,

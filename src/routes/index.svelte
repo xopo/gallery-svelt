@@ -1,5 +1,6 @@
 <script lang='ts' >
 	import { onMount, onDestroy } from 'svelte';
+	import FolderSlide from '../components/Gallery/FolderSlide.svelte';
 	import Gallery from '../components/Gallery/Gallery.svelte';
 	import getSocket from '../WS/socket';
 	import type { Content } from '../WS/types';
@@ -9,8 +10,6 @@
 	let subscription = () => {};
 	let folders = [];
 	let images = [];
-	let stopLoadImages = false;
-	let newSet = true
 	let basePath = '/';
 	let gotToFolder = (s: string): void => {};
 	let history = [];
@@ -26,19 +25,20 @@
 		if (!newEntries.length) return;
 		processInterval = setInterval(function() {
 			if (waitingForImage) return;
-			const [img, ...rest] = newEntries;
-			newEntries = rest;
-			if (!img || !newEntries) {
+			const batch = newEntries.splice(0, 10);
+			
+			if (!batch.length || !newEntries.length) {
 				clearInterval(processInterval);
 			}
-			if (img) {
-				WS.send({ getThumbnail: { dirPath: getURILocation(history), img } });
+			if (batch) {
+				WS.send({ getThumbnail: { dirPath: getURILocation(history), batch } });
 				waitingForImage = true
 			}
 		}, 50);
 	}
 
 	onMount(()=>{
+		console.log('on mount index')
 		WS = getSocket();
 		setTimeout(() => {
 			// WS.send({ getContent: { dirPath: herstory } });
@@ -47,9 +47,9 @@
 
 		subscription = WS.content.subscribe((data: Content) => {
 			if (data.processed) {
-				const { thumb, message} = data.processed;
+				const { thumbs, message} = data.processed;
 				
-				images = [...images, thumb];
+				images = [...images, ...thumbs];
 				waitingForImage = false;
 				if (message === 'completed') {
 					clearInterval(processInterval);
@@ -62,7 +62,6 @@
 		});
 
 		gotToFolder = (folder: string): void => {
-			stopLoadImages = true;
 			history = [...history, folder];
 		}
 	});
@@ -82,10 +81,12 @@
 <head>
 	<title>Gallery</title>
 </head>
-<Gallery 
-	on:click={onGoBack} 
-	{...{folders, images, gotToFolder, basePath, history}}
-/>
+{#if folders && history}
+<FolderSlide on:click={onGoBack} {...{folders, gotToFolder, history}} /> 
+{/if}
+{#if images.length && basePath}
+<Gallery  {...{images, basePath}} />
+{/if}
 <ol>
 	<li>create a save setup folder to remember pinned items</li>
 	<li>get preferences on </li>
