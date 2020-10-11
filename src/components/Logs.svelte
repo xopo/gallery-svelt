@@ -29,18 +29,6 @@
     onDestroy(subscription);
 </script>
 <style>
-    .logs {
-        background: white;
-        border: 1px solid gray;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        width: 50%;
-        height: 50px;
-    }
-    .logs.pinpush{
-        height: 500px;
-    }
     textarea {
         background: black;
         color: white;
@@ -48,21 +36,12 @@
         height: 100%;
         font-size: .5em;
     }
-    textarea:hover {
-        font-size: 1em;
+    textarea.large:hover {
+        font-size: .8em;
     }
-    .pin {
-        display: flex;
-        justify-content: flex-end;
-        margin-right: 10px;
-        cursor: pointer;
-        height: 1em;
-    }
-    /* textarea:empty {
-        display: none;
-    } */
 </style>
-<div class="logs" class:pinpush={pin === icons.pushpin}>
-    <div class="pin" on:click={setPin}>{pin}</div>
-    <textarea value={entry}></textarea>
-</div>
+<textarea 
+    class:large={pin}
+    readonly value={entry} 
+    on:click|stopPropagation
+></textarea>

@@ -1,11 +1,11 @@
 <script lang='ts'>
-    export let viewFolders: boolean = false;
+    export let pinSet: boolean = false;
     import { pinnedItem } from '../WS/UI/store';
     import icons from '../WS/UI/emoji';
     pinnedItem.subscribe(value => {
         console.log('pined svelte', value);
     })
-    $: pin = viewFolders ? icons.pushpin : '' ;
+    $: pin = pinSet ? icons.pushpin : '' ;
 
 </script>
 <style>

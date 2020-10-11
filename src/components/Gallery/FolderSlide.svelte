@@ -11,12 +11,11 @@
     let viewFolders:boolean;
     
     pinnedItem.subscribe((item: SelectedPin) => {
-        console.log('---folder slide get pin', item);
         viewFolders = item.dirPannel;
     })
+    
     console.log({viewFolders})
     const setView = () => { 
-        console.log('----- set view update store')
         pushPinFolder(!viewFolders);
     }
 
@@ -66,7 +65,7 @@
 </style>
 
 <div class="folders" class:view={viewFolders} on:click={setView}>
-    <Pinned {viewFolders}>
+    <Pinned pinSet={viewFolders}>
         <ul>
             {#if history.length > 1}
                 <li>

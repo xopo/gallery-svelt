@@ -15,10 +15,11 @@ const storedItems = typeof localStorage === 'undefined' ?
 export const pinnedItem = writable(storedItems);
 
 export const pushPinFolder = (value: boolean) => {
-    console.log('+++ set push pin for folder', value);
-    pinnedItem.update(pinned => {
-        return {...pinned, dirPannel: value };
-    }); 
+    pinnedItem.update(pinned => ({...pinned, dirPannel: value })); 
+}
+
+export const pushPinLogs = (value: boolean): void => {
+    pinnedItem.update(pinned => ({...pinned, logs: value })); 
 }
 
 pinnedItem.subscribe(pinnedItems => {

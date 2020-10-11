@@ -21,7 +21,7 @@ export interface Content {
 
 export interface SelectedPin {
     dirPannel: boolean, 
-    log: boolean
+    logs: boolean
 }
 export interface WebSock {
     close: () => null,
