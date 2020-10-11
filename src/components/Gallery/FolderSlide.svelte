@@ -19,6 +19,10 @@
         console.log('----- set view update store')
         pushPinFolder(!viewFolders);
     }
+
+    const changePath = ( folder:string): void => {
+        gotToFolder(folder)
+    }
 </script>
 
 <style>
@@ -66,14 +70,14 @@
         <ul>
             {#if history.length > 1}
                 <li>
-                    <button on:click>
+                    <button on:click|stopPropagation>
                         {icons.back}
                     </button>
                 </li>
             {/if}
             {#if folders && folders.length}
             {#each folders as folder}
-                <li on:click={() => gotToFolder(folder)}>{icons.folder} {folder}</li>
+                <li on:click|stopPropagation={() => changePath(folder)}>{icons.folder} {folder}</li>
             {/each}
             {/if}
         </ul>
