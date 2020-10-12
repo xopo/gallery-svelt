@@ -4,6 +4,7 @@ const icons = {
     edit: '✏️',
     forbidden: '⛔️',
     folder: '🗂',
+    images: '📸',
     logs: '🩺',
     lock: '🔒',
     ok: '👍🏻',

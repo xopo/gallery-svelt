@@ -16,12 +16,12 @@
 	}
 </script>
 
-<style>
+<style lang='scss'>
 	main {
 		position: relative;
 		max-width: 56em;
 		background-color: white;
-		padding: 2em;
+		padding: .5em;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
@@ -32,6 +32,9 @@
         bottom: 0;
         right: 0;
         width: 50%;
+		@media only screen and (max-width: 576px) {
+			display: none;
+		}
     }
 	.logs.pinpush{
         height: 500px;

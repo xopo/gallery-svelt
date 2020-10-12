@@ -27,3 +27,8 @@ pinnedItem.subscribe(pinnedItems => {
         localStorage.setItem(key, JSON.stringify(pinnedItems));
     }
 })
+
+export const stats = writable({
+    images: 10,
+    folders: 50
+})

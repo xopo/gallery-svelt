@@ -5,6 +5,7 @@
 	import FolderSlide from '../components/Gallery/FolderSlide.svelte';
 	import Gallery from '../components/Gallery/Gallery.svelte';
 	import getSocket from '../WS/socket';
+	import { stats } from '../WS/UI/store';
 	import type { Content } from '../WS/types';
 	import { getURILocation } from '../WS/UI/helpers';
 
@@ -48,7 +49,6 @@
 		console.log('on mount index')
 		WS = getSocket();
 		setTimeout(() => {
-			// WS.send({ getContent: { dirPath: herstory } });
 			history.push('/')
 		}, 1);
 
@@ -62,7 +62,11 @@
 					clearInterval(processInterval);
 				}
 			} else {
-				({folders, basePath} = data);
+				({ basePath, folders} = data);
+				stats.update( _ => ({
+					images: data?.images?.length || 0,
+					folders: data?.folders?.length || 0
+				}));
 				images = [];
 				updateImages(data.images || []);
 			}

@@ -1,12 +1,34 @@
 <script lang="ts">
 	export let segment: string;
+	import emoji from '../WS/UI/emoji'
+	import { stats, pinnedItem } from '../WS/UI/store';
+
+	const toggleFolderSlide = () => {
+		pinnedItem.update(actualValue => {
+			console.log('bididi', {actualValue});
+			return {
+				...actualValue,
+				dirPannel: !actualValue.dirPannel 
+			}
+		});
+	}
 </script>
 
-<style>
+<style lang="scss">
 	nav {
 		border-bottom: 1px solid rgba(255,62,0,0.1);
 		font-weight: 300;
 		padding: 0 1em;
+		display: flex;
+    	justify-content: space-around;
+		.helper {
+			display: flex;
+    		align-items: center;
+			span + span {
+				margin-left: 50px;
+				cursor: pointer;
+			}
+		}
 	}
 
 	ul {
@@ -57,4 +79,11 @@
 		     the blog data when we hover over the link or tap it on a touchscreen -->
 		<li><a rel=prefetch aria-current="{segment === 'blog' ? 'page' : undefined}" href="blog">blog</a></li>
 	</ul>
+	<div class="helper">
+		<span>{emoji.images}: {$stats.images}</span>
+		<span 
+			on:click={toggleFolderSlide}
+			title="show/hide folder slide"
+		>{emoji.folder}: {$stats.folders}</span>
+	</div>
 </nav>

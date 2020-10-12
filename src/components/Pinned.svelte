@@ -5,17 +5,22 @@
     pinnedItem.subscribe(value => {
         console.log('pined svelte', value);
     })
-    $: pin = pinSet ? icons.pushpin : '' ;
+    export let showUnpin;
+    $: pin = pinSet ? 
+        icons.pushpin : 
+        (showUnpin ? icons.folder : '') ;
 
 </script>
 <style>
      .pin {
         display: flex;
         justify-content: flex-end;
-        margin-right: 10px;
+        padding-right: 5px;
         cursor: pointer;
         height: 1.5em;
         overflow: hidden;
+        width: 100px;
+        margin-left: auto;
     }
 </style>
 <div class="pin">{pin}</div>

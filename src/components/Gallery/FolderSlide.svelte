@@ -12,16 +12,14 @@
     
     let viewFolders:boolean;
     
-    console.log('selected context', getContext('selected'))
     const { getSelected } = getContext('selected');
-    
     let carouselActive = getSelected();
 
     pinnedItem.subscribe((item: SelectedPin) => {
         viewFolders = item && item.dirPannel;
     });
     
-    const setView = () => { 
+    const resetView = () => { 
         pushPinFolder(!viewFolders);
     }
 
@@ -30,27 +28,41 @@
     }
 </script>
 
-<style>
+<style lang='scss'>
     .folders {
         display: block;
         width: 200px;
-        box-shadow: 0 0 20px #aaa;
         position: fixed;
         z-index: 1;
-        background: white;
+        background: transparent;
         left: 0;
         color: black;
         list-style: none;
         height: 100%;
         top: 40px;
         user-select: none;
-        margin-left: -180px;
+        margin-left: -200px;
+         ul {
+            pointer-events: none;
+        }
+        &:hover {
+            margin-left: -175px;
+        }
+        &.hide {
+            display: none;
+        }
+        &.view {
+            margin-left: unset;
+            overflow: scroll;
+            width: 50%;
+            background: white;
+            @media only screen and (max-width: 576px) {
+                width: 100%;
+            }
+        }
     }
-    .folders.hide {
-        display: none;
-    }
-    .folders.view {
-        margin-left: unset;
+    .folders.view ul {
+        pointer-events: auto;
     }
     .folders:empty {
         display: none;
@@ -81,21 +93,19 @@
 
 </style>
 
-<div class="folders" class:view={viewFolders} class:hide={Boolean($carouselActive)} on:click={setView} transition:slide>
-    <Pinned pinSet={viewFolders}>
-        <ul>
-            {#if history.length > 1}
-                <li>
-                    <button on:click|stopPropagation>
-                        {icons.back}
-                    </button>
-                </li>
-            {/if}
-            {#if folders && folders.length}
-            {#each folders as folder}
-                <li on:click|stopPropagation={() => changePath(folder)}>{icons.folder} {folder}</li>
-            {/each}
-            {/if}
-        </ul>
-    </Pinned>
+<div class="folders" class:view={viewFolders} class:hide={Boolean($carouselActive)} on:click={resetView} transition:slide>
+    <ul>
+        {#if history.length > 1}
+            <li on:click|stopPropagation>
+                <button>
+                    {icons.back}
+                </button>
+            </li>
+        {/if}
+        {#if folders && folders.length}
+        {#each folders as folder}
+            <li on:click|stopPropagation={() => changePath(folder)}>{icons.folder} {folder}</li>
+        {/each}
+        {/if}
+    </ul>
 </div>

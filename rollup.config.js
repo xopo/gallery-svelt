@@ -19,6 +19,15 @@ const onwarn = (warning, onwarn) =>
 	(warning.code === 'THIS_IS_UNDEFINED') ||
 	onwarn(warning);
 
+const preprocess = sveltePreprocess({
+	scss: {
+		includePaths: ['src'],
+	},
+	postcss: {
+		plugins: [require('autoprefixer')],
+	},
+});
+
 export default {
 	client: {
 		input: config.client.input().replace(/.js$/, '.ts'),
@@ -46,8 +55,8 @@ export default {
 				dedupe: ['svelte']
 			}),
 			commonjs(),
+			preprocess,
 			typescript({ sourceMap: dev }),
-
 			legacy && babel({
 				extensions: ['.js', '.mjs', '.html', '.svelte'],
 				babelHelpers: 'runtime',
@@ -82,6 +91,7 @@ export default {
 				'process.browser': false,
 				'process.env.NODE_ENV': JSON.stringify(mode)
 			}),
+			preprocess,
 			svelte({
 				generate: 'ssr',
 				hydratable: true,

@@ -10,15 +10,22 @@
 
     const { getSelected } = getContext('selected');
     const selectedContext = getSelected();
+    let y: number=2000;
+    let scrollValue: number;
     
     const setSrc = (img: string): string => `cached/images/${basePath}${img}`;
     const select = (img: string): void => { 
         const src =`${basePath}${img.replace('.thumb', '')}`;
         selected = { img: img, src};
+        scrollValue = y;
+        console.log('set scroll', {y, scrollValue})
     };
 
     const unselect = () => {
         selected = undefined;
+        setTimeout(() => {
+            window.scrollTo(0, scrollValue);
+        }, 5);
     }
 
     const nextImg = () => {
@@ -41,33 +48,39 @@
 
     // reactive set selected
     $: {
-        console.log({basePath},'set basepath');
+        console.log(y);
         selectedContext.set( selected ? {src: basePath, img: selected.img } : null);
     }
        
 </script>
 
-<style>
+<style lang="scss">
 	.gallery {
 		display: flex;
     	flex-wrap: wrap;
         user-select: none;
-	}
-    .gallery.selected {
-        opacity: 0;
-        height: 80vh;
-        overflow: hidden;
+        img {
+            height: 250px;
+            width: auto;
+            object-fit: cover;
+            flex: 1;
+            border: 1px solid transparent;
+            cursor: pointer;
+            @media only screen and (max-width: 576px) {
+                height: unset;
+                width: 25%;
+            }
+        }
     }
-	.gallery img {
-        height: 250px;
-        width: auto;
-        object-fit: cover;
-        flex: 1;
-        border: 1px solid transparent;
-        cursor: pointer;
-	}
+    .gallery.selected {
+            opacity: 0;
+            height: 80vh;
+            overflow: hidden;
+    }
+        
  
 </style>
+<svelte:window bind:scrollY={y} />
 {#if images && images.length}
 <div class='gallery' transition:slide|local class:selected>
 {#each images as image}

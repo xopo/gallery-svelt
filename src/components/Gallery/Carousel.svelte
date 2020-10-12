@@ -8,23 +8,21 @@
     let img: string;
     let src: string;
 
-    $: {
-        ({img, src} = selected);
-        console.log('---- carousel', {img, src})
-    }
+    $: ({img, src} = selected);
+    
     const escapeView = ({key}) => {
         if (key === 'Escape') unselect();
     }
 </script>
 <style>
     .carousel {
-        position: fixed;
+        position: absolute;
         background: rgba(0, 0, 0, 0.9);;
-        top: 1em;
-        left: 1em;
+        top: 0;
+        left: 0;
         margin: 0 auto;
-        right: 1em;
-        bottom: 1em;
+        right: 0;
+        bottom: 0;
         display: flex;
         align-items: center;
         user-select: none;
@@ -54,15 +52,18 @@
         align-items: center;
         width: 80px;
         height: 100%;
+        position: absolute;
+        opacity: .2;
     }
     .control:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.03);
     }
     .prev {
         background: left 0 center / contain no-repeat url('/left.png');
     }
     .next {
         background: right 0 center / contain no-repeat url('/right.png');
+        right: 0;
     }
 </style>
 <svelte:window on:keydown={escapeView}/>
