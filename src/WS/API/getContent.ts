@@ -75,7 +75,7 @@ const checkAndCreateImage = async (img: string, basePath, source: string): Promi
     } catch (er) {
         await sharp(input)
             .rotate()
-            .resize(200)
+            .resize(300)
             .toFile(output);
     }
     

@@ -13,7 +13,8 @@
     
     const setSrc = (img: string): string => `cached/images/${basePath}${img}`;
     const select = (img: string): void => { 
-        selected = { img, src: setSrc(img)};
+        const src =`${basePath}${img.replace('.thumb', '')}`;
+        selected = { img: img, src};
     };
 
     const unselect = () => {
@@ -40,7 +41,7 @@
 
     // reactive set selected
     $: {
-        console.log({basePath});
+        console.log({basePath},'set basepath');
         selectedContext.set( selected ? {src: basePath, img: selected.img } : null);
     }
        
@@ -52,6 +53,11 @@
     	flex-wrap: wrap;
         user-select: none;
 	}
+    .gallery.selected {
+        opacity: 0;
+        height: 80vh;
+        overflow: hidden;
+    }
 	.gallery img {
         height: 250px;
         width: auto;
@@ -63,7 +69,7 @@
  
 </style>
 {#if images && images.length}
-<div class='gallery' transition:slide|local>
+<div class='gallery' transition:slide|local class:selected>
 {#each images as image}
 	<img on:click={() => select(image)} src={setSrc(image)} alt={image}>
 {/each}
