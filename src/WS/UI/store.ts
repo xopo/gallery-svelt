@@ -10,7 +10,7 @@ const defaultValues = {
 
 const storedItems = typeof localStorage === 'undefined' ? 
     defaultValues : 
-    JSON.parse(localStorage.getItem(key)); 
+    JSON.parse((localStorage.getItem(key) || JSON.stringify(defaultValues))); 
 
 export const pinnedItem = writable(storedItems);
 

@@ -6,6 +6,7 @@ import polka from 'polka';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 import WebSocket from 'ws';
+import conf from './WS/API/envData';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
 import { getContent, getThumbNailImage } from './WS/API/getContent';
@@ -15,9 +16,17 @@ import { log } from './logger';
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
+const originalImages = sirv(conf.IMAGESOURCE, {
+	maxAge: 31536000, // 1Y
+	immutable: true
+});
+
+export const baseUrl = dev ? '/' : '/gallery';
+
 const { handler } = polka() // You can also use Express
-	//.use(cachedImage)
+	.use(originalImages)
 	.use(
+		baseUrl,
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
 		sapper.middleware()
@@ -25,7 +34,7 @@ const { handler } = polka() // You can also use Express
 	
 const server = http.createServer(handler);
 const wss = new WebSocket.Server({server});
-export let wsLog = _ => {};
+export let wsLog = (el: Object) => {};
 
 wss.on('connection', ws => {
 	const send = entry => ws.send(setMessage(entry));

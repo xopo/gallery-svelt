@@ -1,14 +1,20 @@
 <script lang="ts">
     export let selected: { img: string, src: string };
-    export let unselect;
-    export let nextImg;
-    export let previousImg;
+    export let unselect = () => null;
+    export let nextImg = () => null;
+    export let previousImg = () => null;
     
     let WS = null;
     let img: string;
     let src: string;
 
-    $: ({img, src} = selected);
+    $: {
+        ({img, src} = selected);
+        console.log('---- carousel', {img, src})
+    }
+    const escapeView = ({key}) => {
+        if (key === 'Escape') unselect();
+    }
 </script>
 <style>
     .carousel {
@@ -27,11 +33,13 @@
         flex-grow: 1;
         display: flex;
         height: 100%;
+        width: 100%;
         align-items: center;
     }
     .img-container div {
-        max-height: calc(100vh - 2em);
+        max-height: calc(100% - 4em);
         width: 100%;
+        display: flex;
     }
     img {
         width: 100%;
@@ -57,6 +65,7 @@
         background: right 0 center / contain no-repeat url('/right.png');
     }
 </style>
+<svelte:window on:keydown={escapeView}/>
 <div class="carousel" on:click={unselect}>
     <div class="control prev" on:click|stopPropagation={previousImg}>previous</div>
     <div class="img-container">

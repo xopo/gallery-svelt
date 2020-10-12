@@ -18,8 +18,8 @@
     let carouselActive = getSelected();
 
     pinnedItem.subscribe((item: SelectedPin) => {
-        viewFolders = item.dirPannel;
-    })
+        viewFolders = item && item.dirPannel;
+    });
     
     const setView = () => { 
         pushPinFolder(!viewFolders);

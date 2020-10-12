@@ -9,10 +9,9 @@
 	let viewLogs=false;
 	pinnedItem.subscribe((item: SelectedPin) => {
 		console.log('~~~ got viewLogs value from store', item)
-        viewLogs = item.logs || false;
+		viewLogs = item && item.logs;
     })
 	const setLogsPin = () => {
-		console.log("===+++", viewLogs)
 		pushPinLogs(!viewLogs);
 	}
 </script>
