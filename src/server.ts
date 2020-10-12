@@ -9,14 +9,11 @@ import WebSocket from 'ws';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
 import { getContent, getThumbNailImage } from './WS/API/getContent';
+import { log } from './logger';
+
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
-
-/*@TODO remove sirv files from image source after the cache functionality is completed*/
-// const galleryStuff = sirv(confg.IMAGESOURCE);
-// console.log({cacheDir})
-// const cachedImage = sirv(cacheDir)
 
 const { handler } = polka() // You can also use Express
 	//.use(cachedImage)
@@ -59,6 +56,10 @@ wss.on('connection', ws => {
 			} else {
 				send({ content: {processed: { message: 'error bad dir or img' } } });
 			}
+		}
+
+		if (data.getCarousel) {
+			log(['get carouse', data.getCarousel]);
 		}
 	});
 

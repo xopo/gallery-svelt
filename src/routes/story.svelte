@@ -1,5 +1,5 @@
 <script lang="ts" >
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy } from 'svelte'; 
     import type { Task } from '../WS/types';
     import TaskComponent from '../components/Taks/TaskComponent.svelte';
     import TaskForm from '../components/Taks/TaskForm.svelte'; 
@@ -83,12 +83,17 @@
     {/if}
     <ol>
         {#each tasks as task (task.v)} 
-            <TaskComponent  on:click={_=>setCompletedTask(task.id)} {task} {setEdit}/>
+            <TaskComponent  
+                on:click={_=>setCompletedTask(task.id)} 
+                {task} 
+                {setEdit}/>
         {/each}
     </ol>
     <ol class='history'>
         {#each history as ctask (ctask.v)} 
-            <TaskComponent  on:click={_=>resetHistoryTask(ctask.id)} task={ctask}/>
+            <TaskComponent  
+                on:click={_=>resetHistoryTask(ctask.id)} 
+                task={ctask}/>
         {/each}
     </ol>
 {/if}

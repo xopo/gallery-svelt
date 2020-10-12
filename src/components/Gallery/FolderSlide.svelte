@@ -1,20 +1,26 @@
 <script lang='ts'>
-    export let folders: Array<string>;
+    import { getContext } from 'svelte';
+    import { slide } from 'svelte/transition';
     import Pinned from '../Pinned.svelte';
     import icons from '../../WS/UI/emoji';
     import { pinnedItem, pushPinFolder} from '../../WS/UI/store';
     import type { SelectedPin } from '../../WS/types';
-
+    
+    export let folders: Array<string>;
     export let history: Array<string>;
     export let gotToFolder: (s :string)=>void;
     
     let viewFolders:boolean;
     
+    console.log('selected context', getContext('selected'))
+    const { getSelected } = getContext('selected');
+    
+    let carouselActive = getSelected();
+
     pinnedItem.subscribe((item: SelectedPin) => {
         viewFolders = item.dirPannel;
     })
     
-    console.log({viewFolders})
     const setView = () => { 
         pushPinFolder(!viewFolders);
     }
@@ -25,7 +31,7 @@
 </script>
 
 <style>
-       .folders {
+    .folders {
         display: block;
         width: 200px;
         box-shadow: 0 0 20px #aaa;
@@ -35,11 +41,13 @@
         left: 0;
         color: black;
         list-style: none;
-        padding: 2em 1em;
         height: 100%;
         top: 40px;
         user-select: none;
         margin-left: -180px;
+    }
+    .folders.hide {
+        display: none;
     }
     .folders.view {
         margin-left: unset;
@@ -54,6 +62,15 @@
         left: 0;
         color: black;
     }
+    ul {
+        list-style: none;
+        padding-left: 0;
+        padding-right: 1em;
+        margin: 0;
+    }
+    .view ul {
+        padding-right: 0;
+    }
     li {
         cursor: pointer;
         padding: .5em ;
@@ -64,7 +81,7 @@
 
 </style>
 
-<div class="folders" class:view={viewFolders} on:click={setView}>
+<div class="folders" class:view={viewFolders} class:hide={Boolean($carouselActive)} on:click={setView} transition:slide>
     <Pinned pinSet={viewFolders}>
         <ul>
             {#if history.length > 1}

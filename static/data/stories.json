@@ -37,16 +37,16 @@
   {
     "id": "T18",
     "v": "get a list of images and create a galery layout",
-    "c": false
+    "c": true
   },
   {
     "id": "T19",
     "v": "keep the list of stories in a json on the backend",
-    "c": false
+    "c": true
   },
   {
     "id": "T20",
     "v": "be able to store json data and update it",
-    "c": false
+    "c": true
   }
 ]

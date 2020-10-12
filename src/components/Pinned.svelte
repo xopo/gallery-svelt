@@ -14,7 +14,8 @@
         justify-content: flex-end;
         margin-right: 10px;
         cursor: pointer;
-        height: 1em;
+        height: 1.5em;
+        overflow: hidden;
     }
 </style>
 <div class="pin">{pin}</div>

@@ -1,10 +1,17 @@
 <script lang='ts' >
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
+
 	import FolderSlide from '../components/Gallery/FolderSlide.svelte';
 	import Gallery from '../components/Gallery/Gallery.svelte';
 	import getSocket from '../WS/socket';
 	import type { Content } from '../WS/types';
 	import { getURILocation } from '../WS/UI/helpers';
+
+	let selected = writable({});
+	setContext('selected', {
+		getSelected: () => selected
+    })
 
 	let WS = null;
 	let subscription = () => {};
