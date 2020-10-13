@@ -23,9 +23,10 @@
     	justify-content: space-around;
 		.helper {
 			display: flex;
-    		align-items: center;
+			align-items: center;
+			margin-left: auto;
 			span + span {
-				margin-left: 50px;
+				margin-left: 1em;
 				cursor: pointer;
 			}
 		}
@@ -84,13 +85,12 @@
 	</ul>
 	<div class="helper">
 		{#if $stats.images && $stats.images > 0}
-			<span>{emoji.images}: {$stats.images}</span>
+			<span>{emoji.images} {$stats.images}</span>
 		{/if}
-		{#if $stats.folders && $stats.folders > 0}
-			<span 
-				on:click={toggleFolderSlide}
-				title="show/hide folder slide"
-			>{emoji.folder}: {$stats.folders}</span>
-		{/if}
+		<span 
+			on:click={toggleFolderSlide}
+			title="show/hide folder slide"
+		>{$stats.folders > 0 ? `${emoji.folder} ${$stats.folders}` : `${emoji.folder}`}</span>
+		
 	</div>
 </nav>

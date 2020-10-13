@@ -40,7 +40,7 @@
         user-select: none;
         margin-left: -400px;
         padding: 2em;
-         ul {
+        ul {
             pointer-events: none;
         }
         &:hover {
@@ -61,6 +61,13 @@
     }
     .folders.view ul {
         pointer-events: auto;
+        li {
+            cursor: pointer;
+            padding: .5em ;
+            &:hover{
+                outline: 1px solid #ddd;
+            }
+        }
     }
     .folders:empty {
         display: none;
@@ -81,14 +88,7 @@
     .view ul {
         padding-right: 0;
     }
-    li {
-        cursor: pointer;
-        padding: .5em ;
-    }
-    li:hover{
-        outline: 1px solid #ddd;
-    }
-
+    
 </style>
 
 <div class="folders" class:view={viewFolders} class:hide={Boolean($carouselActive)}>
@@ -101,9 +101,9 @@
             </li>
         {/if}
         {#if folders && folders.length}
-        {#each folders as folder}
-            <li on:click|stopPropagation={() => changePath(folder)}>{icons.folder} {folder}</li>
-        {/each}
+            {#each folders as folder}
+                <li on:click|stopPropagation={() => changePath(folder)}>{icons.folder} {folder}</li>
+            {/each}
         {/if}
     </ul>
 </div>

@@ -14,7 +14,14 @@
     let y: number=2000;
     let scrollValue: number;
     
-    const setSrc = (img: string): string => `cached/images/${basePath}${img}`;
+
+    export const joinPath = (...args) => {
+        if (!args.length) {
+            throw new Error('joinPath requires arguments');
+        }
+        return args.reduce((acc: string, current: string): string => `${acc}/${current}`, '').split('/').filter(Boolean).join('/');
+    }
+    const setSrc = (img: string): string => joinPath('cached', 'images', basePath, img);
     const select = (img: string): void => { 
         const src =`${basePath}${img.replace('.thumb', '')}`;
         

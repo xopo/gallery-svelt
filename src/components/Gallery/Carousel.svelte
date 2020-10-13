@@ -93,7 +93,8 @@
         button {
             background: transparent;
             border: 1px solid rgba(255,255, 255, 0.3);
-            padding: .5em 1.5em;
+            padding: .2em 1.5em;
+            font-size: 1.5em;
             border-radius: 7px;
             box-shadow: 0px 0px 3px #aaa;
         }
@@ -103,14 +104,14 @@
 </style>
 <svelte:window on:keydown={escapeView}/>
 <div class="carousel">
-    <div class="container">
+    <div class="container" on:click={showHelpbars}>
         <div class="bar nav" class:showHelpers>
             <button  on:click={unselect}>{emoji.up}</button>
             <button>{emoji.back}</button>
         </div>
         <div class="image-container">
             <div class="control prev" on:click|stopPropagation={previousImg}>previous</div>
-            <img src="{src}" alt="{img}" on:click|stopPropagation={showHelpbars}>
+            <img src="{src}" alt="{img}">
             <div class="control next" on:click|stopPropagation={nextImg}>next</div>
         </div>
         <div class="bar tools" class:showHelpers>
