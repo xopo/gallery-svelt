@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let segment: string;
 	import emoji from '../WS/UI/emoji'
-	import { stats, pinnedItem } from '../WS/UI/store';
+	import { stats, pinnedItem, fullView } from '../WS/UI/store';
 
 	const toggleFolderSlide = () => {
 		pinnedItem.update(actualValue => {
@@ -28,6 +28,9 @@
 				margin-left: 50px;
 				cursor: pointer;
 			}
+		}
+		&.fullView {
+			display: none;
 		}
 	}
 
@@ -70,7 +73,7 @@
 	}
 </style>
 
-<nav>
+<nav class:fullView={$fullView}>
 	<ul>
 		<li><a aria-current="{segment === undefined ? 'page' : undefined}" href=".">home</a></li>
 		<li><a aria-current="{segment === 'about' ? 'page' : undefined}" href="about">about</a></li>
@@ -80,10 +83,14 @@
 		<li><a rel=prefetch aria-current="{segment === 'blog' ? 'page' : undefined}" href="blog">blog</a></li>
 	</ul>
 	<div class="helper">
-		<span>{emoji.images}: {$stats.images}</span>
-		<span 
-			on:click={toggleFolderSlide}
-			title="show/hide folder slide"
-		>{emoji.folder}: {$stats.folders}</span>
+		{#if $stats.images && $stats.images > 0}
+			<span>{emoji.images}: {$stats.images}</span>
+		{/if}
+		{#if $stats.folders && $stats.folders > 0}
+			<span 
+				on:click={toggleFolderSlide}
+				title="show/hide folder slide"
+			>{emoji.folder}: {$stats.folders}</span>
+		{/if}
 	</div>
 </nav>

@@ -28,7 +28,9 @@ pinnedItem.subscribe(pinnedItems => {
     }
 })
 
+export const fullView = writable(false);
+
 export const stats = writable({
-    images: 10,
-    folders: 50
+    images: null,
+    folders: null
 })

@@ -1,6 +1,7 @@
 <script lang="ts">
     import {getContext} from 'svelte';
     import { slide } from 'svelte/transition';
+    import { fullView } from '../../WS/UI/store';
     import Carousel from './Carousel.svelte';
     export let images: Array<string>;
     export let basePath: string;
@@ -16,9 +17,10 @@
     const setSrc = (img: string): string => `cached/images/${basePath}${img}`;
     const select = (img: string): void => { 
         const src =`${basePath}${img.replace('.thumb', '')}`;
+        
         selected = { img: img, src};
         scrollValue = y;
-        console.log('set scroll', {y, scrollValue})
+        fullView.set(true);
     };
 
     const unselect = () => {
@@ -26,6 +28,7 @@
         setTimeout(() => {
             window.scrollTo(0, scrollValue);
         }, 5);
+        fullView.set(false);
     }
 
     const nextImg = () => {
@@ -48,7 +51,6 @@
 
     // reactive set selected
     $: {
-        console.log(y);
         selectedContext.set( selected ? {src: basePath, img: selected.img } : null);
     }
        

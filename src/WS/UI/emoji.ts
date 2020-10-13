@@ -1,6 +1,7 @@
 const icons = {
     back: '🔙',
     check: '✔️',
+    delete: '🗑️',
     edit: '✏️',
     forbidden: '⛔️',
     folder: '🗂',
@@ -11,6 +12,8 @@ const icons = {
     pin: '📌',
     pushpin: '📍',
     reload: '🔄',
+    rotateLeft: '↩️',
+    rotateRight: '↪️',
     sad: '🥺',
     scared: '😱',
     settings: '⚙️',

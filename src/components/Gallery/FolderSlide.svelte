@@ -18,20 +18,17 @@
     pinnedItem.subscribe((item: SelectedPin) => {
         viewFolders = item && item.dirPannel;
     });
-    
-    const resetView = () => { 
-        pushPinFolder(!viewFolders);
-    }
 
     const changePath = ( folder:string): void => {
-        gotToFolder(folder)
+        gotToFolder(folder);
+        pushPinFolder(!viewFolders);
     }
 </script>
 
 <style lang='scss'>
     .folders {
         display: block;
-        width: 200px;
+        width: 400px;
         position: fixed;
         z-index: 1;
         background: transparent;
@@ -41,7 +38,8 @@
         height: 100%;
         top: 40px;
         user-select: none;
-        margin-left: -200px;
+        margin-left: -400px;
+        padding: 2em;
          ul {
             pointer-events: none;
         }
@@ -93,7 +91,7 @@
 
 </style>
 
-<div class="folders" class:view={viewFolders} class:hide={Boolean($carouselActive)} on:click={resetView} transition:slide>
+<div class="folders" class:view={viewFolders} class:hide={Boolean($carouselActive)}>
     <ul>
         {#if history.length > 1}
             <li on:click|stopPropagation>

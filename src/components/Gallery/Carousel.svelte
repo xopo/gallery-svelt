@@ -1,4 +1,5 @@
 <script lang="ts">
+    import emoji from '../../WS/UI/emoji';
     export let selected: { img: string, src: string };
     export let unselect = () => null;
     export let nextImg = () => null;
@@ -7,14 +8,16 @@
     let WS = null;
     let img: string;
     let src: string;
+    let showHelpers: boolean = false;
 
     $: ({img, src} = selected);
     
     const escapeView = ({key}) => {
         if (key === 'Escape') unselect();
     }
+    const showHelpbars = () => showHelpers = !showHelpers;
 </script>
-<style>
+<style lang='scss'>
     .carousel {
         position: absolute;
         background: rgba(0, 0, 0, 0.9);;
@@ -27,16 +30,17 @@
         align-items: center;
         user-select: none;
     }
-    .img-container {
+    .container {
         flex-grow: 1;
-        display: flex;
         height: 100%;
         width: 100%;
         align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+        display: flex;
     }
-    .img-container div {
-        max-height: calc(100% - 4em);
-        width: 100%;
+    .image-container {
+        position: relative;
         display: flex;
     }
     img {
@@ -65,15 +69,54 @@
         background: right 0 center / contain no-repeat url('/right.png');
         right: 0;
     }
+    .bar {
+        padding: 0;
+        width: 100%;
+        background: rgba(255,255,255,.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: hidden;
+        height: 0;
+        &.showHelpers {
+            visibility: visible;
+            height: 2.5em;
+            padding: 1em;
+        }
+        &.nav {
+            justify-content: space-around;
+        }
+        &.tools {
+            justify-content: space-around;
+            bottom: 0;
+        }
+        button {
+            background: transparent;
+            border: 1px solid rgba(255,255, 255, 0.3);
+            padding: .5em 1.5em;
+            border-radius: 7px;
+            box-shadow: 0px 0px 3px #aaa;
+        }
+
+    }
+
 </style>
 <svelte:window on:keydown={escapeView}/>
-<div class="carousel" on:click={unselect}>
-    <div class="control prev" on:click|stopPropagation={previousImg}>previous</div>
-    <div class="img-container">
-        <div>
-            <img src="{src}" alt="{img}" on:click|stopPropagation>
+<div class="carousel">
+    <div class="container">
+        <div class="bar nav" class:showHelpers>
+            <button  on:click={unselect}>{emoji.up}</button>
+            <button>{emoji.back}</button>
+        </div>
+        <div class="image-container">
+            <div class="control prev" on:click|stopPropagation={previousImg}>previous</div>
+            <img src="{src}" alt="{img}" on:click|stopPropagation={showHelpbars}>
+            <div class="control next" on:click|stopPropagation={nextImg}>next</div>
+        </div>
+        <div class="bar tools" class:showHelpers>
+            <button>{emoji.rotateLeft}</button>
+            <button>{emoji.rotateRight}</button>
+            <button>{emoji.delete}</button>
         </div>
     </div>
-    <div class="control next" on:click|stopPropagation={nextImg}>next</div>
 </div>
-{JSON.stringify(selected, null, 2)}

@@ -98,9 +98,5 @@
 {#if images.length && basePath}
 <Gallery  {...{images, basePath}} />
 {/if}
-<ol>
-	<li>create a save setup folder to remember pinned items</li>
-	<li>get preferences on </li>
-</ol>
 
 
