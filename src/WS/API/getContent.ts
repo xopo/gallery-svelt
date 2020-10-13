@@ -17,7 +17,7 @@ const fileAccepted = (fileName: string): boolean => {
     return false;
 }
 
-export const cacheDir = path.resolve(process.cwd(), 'static', 'cached', 'images');
+export const cacheDir = path.resolve('static', 'cached', 'images');
 
 export const getContent = async (fromFolder:string): Promise<Content> => {
     const basePath = fromFolder ?? '/';
