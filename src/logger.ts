@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const logFile = './static/logs/backend.log';
+const logFile = 'static/logs/backend.log';
 
 export const logStream = fs.createWriteStream(logFile, {flags: 'a'});
 
