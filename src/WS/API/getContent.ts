@@ -1,9 +1,9 @@
 import fs, { promises as afs } from 'fs';
 import path from 'path';
 import confg from './envData';
-import { log } from '../../logger';
 import sharp from 'sharp';
 import type { Content } from '../types';
+import { wsLog as log } from '../../server';
 
 
 // export const galleryPath = imagesPath;

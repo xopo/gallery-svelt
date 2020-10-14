@@ -9,8 +9,8 @@ import WebSocket from 'ws';
 import conf from './WS/API/envData';
 import { getTasks, updateTask } from './WS/API/fileManipulation';
 import { getMessage, setMessage } from './WS/wsHelper';
-import { getContent, getThumbNailImage } from './WS/API/getContent';
 import { log } from './logger';
+import { getContent, getThumbNailImage } from './WS/API/getContent';
 
 
 const { PORT, NODE_ENV } = process.env;
@@ -34,7 +34,8 @@ const { handler } = polka() // You can also use Express
 	
 const server = http.createServer(handler);
 const wss = new WebSocket.Server({server});
-export let wsLog = (el: Object) => {};
+
+export let wsLog = (el: Object | string) => {};
 
 wss.on('connection', ws => {
 	const send = entry => ws.send(setMessage(entry));
@@ -72,8 +73,9 @@ wss.on('connection', ws => {
 		}
 	});
 
-	wsLog = log => {
-		send({log})
+	wsLog = logentity => {
+		send(logentity);
+		log(logentity);
 	};
 
 }) 
