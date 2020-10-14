@@ -2,7 +2,7 @@
   {
     "id": "T11",
     "v": "-shooud have old stories in a history element visible on something",
-    "c": true
+    "c": false
   },
   {
     "id": "T12",
@@ -32,7 +32,7 @@
   {
     "id": "T17",
     "v": "should be able to use .env to store the gallery location so that I can use the app in different environments",
-    "c": false
+    "c": true
   },
   {
     "id": "T18",
