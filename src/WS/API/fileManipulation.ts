@@ -1,8 +1,10 @@
 import { promises as fs } from 'fs';
+import path from 'path';
+import conf from './envData';
 import type {Task} from '../../WS/types';
 import { getMessage, setMessage } from '../wsHelper';
 
-const storiesFile = 'static/data/stories.json';
+const storiesFile = path.join(conf.cwd, 'static/data/stories.json');
 
 export const getTasks = async ():Promise<Array<Task>> => getMessage(await fs.readFile(storiesFile, 'utf8'));
 

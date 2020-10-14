@@ -1,6 +1,8 @@
 import fs from 'fs';
+import path from 'path';
+import conf from './WS/API/envData';
 
-const logFile = 'static/logs/backend.log';
+const logFile = path.join(conf.cwd, 'static/logs/backend.log');
 
 export const logStream = fs.createWriteStream(logFile, {flags: 'a'});
 
