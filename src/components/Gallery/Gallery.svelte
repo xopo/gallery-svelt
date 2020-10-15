@@ -2,6 +2,7 @@
     import {getContext} from 'svelte';
     import { slide } from 'svelte/transition';
     import { fullView } from '../../WS/UI/store';
+    import LazyImage from './LazyImage.svelte';
     import Carousel from './Carousel.svelte';
     export let images: Array<string>;
     export let basePath: string;
@@ -68,34 +69,23 @@
 		display: flex;
     	flex-wrap: wrap;
         user-select: none;
-        img {
-            height: 250px;
-            width: auto;
-            object-fit: cover;
-            flex: 1;
-            border: 1px solid transparent;
-            cursor: pointer;
-            @media only screen and (max-width: 576px) {
-                height: unset;
-                width: 25%;
-            }
-        }
     }
     .gallery.selected {
-            opacity: 0;
-            height: 80vh;
-            overflow: hidden;
+        opacity: 0;
+        height: 80vh;
+        overflow: hidden;
     }
         
  
 </style>
 <svelte:window bind:scrollY={y} />
 {#if images && images.length}
-<div class='gallery' transition:slide|local class:selected>
-{#each images as image}
-	<img on:click={() => select(image)} src={setSrc(image)} alt={image}>
-{/each}
-</div>
+    <div class='gallery' transition:slide|local class:selected>
+    {#each images as image}
+        <LazyImage src={setSrc(image)} alt={image} />
+        <!-- <img on:click={() => select(image)} src={setSrc(image)} alt={image}  loading="lazy"> -->
+    {/each}
+    </div>
 {/if}
 {#if selected}
 <Carousel {...{selected, unselect, nextImg, previousImg}}/>
